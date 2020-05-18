@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  * Hello world!
  *
  */
-@ComponentScan("org.example")
+@ComponentScan(value = "org.example")
 public class App 
 {
     public static void main( String[] args )
@@ -23,6 +23,10 @@ public class App
 
 @Service
 class Hello{
+
+	public Hello(){
+		System.out.println("Hello constructor");
+	}
 	public void sayHello(){
 		System.out.println("hello");
 	}

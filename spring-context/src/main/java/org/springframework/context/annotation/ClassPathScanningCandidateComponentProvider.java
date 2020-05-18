@@ -93,8 +93,10 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 	private String resourcePattern = DEFAULT_RESOURCE_PATTERN;
 
+	//内部维护有两个final类型的List：这两个对象在执行本类的scanCandidateComponents()方法时就会起作用。
+	//includeFilters中的就是满足过滤规则的
 	private final List<TypeFilter> includeFilters = new LinkedList<>();
-
+	//excludeFilters则是不满足过滤规则的
 	private final List<TypeFilter> excludeFilters = new LinkedList<>();
 
 	@Nullable
@@ -203,8 +205,11 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 */
 	@SuppressWarnings("unchecked")
 	protected void registerDefaultFilters() {
+		// 这里需要注意，默认情况下都是添加了@Component这个注解的
+		//（相当于@Service @Controller @Respository等都会扫描，因为这些注解都属于@Component）  另外@Configuration也属于哦
 		this.includeFilters.add(new AnnotationTypeFilter(Component.class));
 		ClassLoader cl = ClassPathScanningCandidateComponentProvider.class.getClassLoader();
+		//下面两个 是兼容JSR-250的@ManagedBean和330的@Named注解
 		try {
 			this.includeFilters.add(new AnnotationTypeFilter(
 					((Class<? extends Annotation>) ClassUtils.forName("javax.annotation.ManagedBean", cl)), false));
@@ -263,6 +268,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	public void setResourceLoader(@Nullable ResourceLoader resourceLoader) {
 		this.resourcePatternResolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
 		this.metadataReaderFactory = new CachingMetadataReaderFactory(resourceLoader);
+		// Spring5以后才有这句，优化了bean扫描
 		this.componentsIndex = CandidateComponentsIndexLoader.loadIndex(this.resourcePatternResolver.getClassLoader());
 	}
 

@@ -63,7 +63,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		// https://blog.csdn.net/f641385712/article/details/88059145
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		//ClassPathBeanDefinitionScanner是一个扫描指定类路径中注解Bean定义的扫描器，在它初始化的时候，会初始化一些需要被扫描的注解，初始化用于加载包下的资源的Loader。
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
